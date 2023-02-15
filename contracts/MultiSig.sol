@@ -20,6 +20,12 @@ contract MultiSig {
     mapping(uint => mapping(address => bool)) public confirmations;
 
     // payable receive function that allows our Multi-Sig wallet to accept funds
+
+    function isConfirmed(uint transactionId) public view returns (bool) {
+        //Return true if the transaction is confirmed and false if it is not.
+        return getConfirmationsCount(transactionId) >= required;
+    }
+
     receive() external payable {}
 
     function getConfirmationsCount(
