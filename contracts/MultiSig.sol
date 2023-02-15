@@ -19,12 +19,13 @@ contract MultiSig {
     //maps the transaction id (uint) to an owner (address) to whether or not they have confirmed the transaction (bool).
     mapping(uint => mapping(address => bool)) public confirmations;
 
+    //The transaction should only execute if it is confirmed. If not, revert the transaction.
     function executeTransaction(uint transactionId) public {
         require(isConfirmed(transactionId));
         Transaction storage _tx = transactions[transactionId];
         (bool success, ) = _tx.destination.call{value: _tx.value}("");
         require(success);
-        _tx.executed = true;
+        _tx.executed = true; //Once transferred, set boolean to true
     }
 
     // payable receive function that allows our Multi-Sig wallet to accept funds
