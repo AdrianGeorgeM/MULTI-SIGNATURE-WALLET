@@ -57,11 +57,10 @@ contract MultiSig {
     function addTransaction(
         address destination,
         uint value
-    ) public returns (uint transactionId) {
-        //This function should create a new transaction struct and add it to the transactions storage variable
-        transactionId = transactionCount; // transactionCount is the ID of the transaction
-        transactions[transactionCount] = Transaction(destination, value, false); //Set the executed boolean should be set to false by default.
-        transactionCount += 1; // increment transactionCount
+    ) internal returns (uint) {
+        transactions[transactionCount] = Transaction(destination, value, false);
+        transactionCount += 1;
+        return transactionCount - 1;
     }
 
     constructor(address[] memory _owners, uint _confirmations) {
