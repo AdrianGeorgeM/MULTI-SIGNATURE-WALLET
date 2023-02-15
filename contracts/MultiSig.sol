@@ -16,6 +16,17 @@ contract MultiSig {
     //Define a mapping that maps transaction IDs to Transaction structs
     mapping(uint => Transaction) public transactions;
 
+    //  function to put our transactions into that storage!
+    function addTransaction(
+        address destination,
+        uint value
+    ) public returns (uint transactionId) {
+        //This function should create a new transaction struct and add it to the transactions storage variable
+        transactionId = transactionCount; // transactionCount is the ID of the transaction
+        transactions[transactionCount] = Transaction(destination, value, false); //Set the executed boolean should be set to false by default.
+        transactionCount += 1; // increment transactionCount
+    }
+
     constructor(address[] memory _owners, uint _confirmations) {
         //revert the deployment transaction in the following situations:
         //1. if the number of owners is 0
