@@ -31,8 +31,18 @@ contract MultiSig {
         return count;
     }
 
+    function isOwner(address addr) private view returns (bool) {
+        for (uint i = 0; i < owners.length; i++) {
+            if (owners[i] == addr) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // This function should create a confirmation for the transaction from the msg.sender.
     function confirmTransaction(uint transactionId) public {
+        require(isOwner(msg.sender));
         confirmations[transactionId][msg.sender] = true;
     }
 
