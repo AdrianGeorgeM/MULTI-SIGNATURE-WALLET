@@ -68,6 +68,9 @@ contract MultiSig {
     function confirmTransaction(uint transactionId) public {
         require(isOwner(msg.sender));
         confirmations[transactionId][msg.sender] = true;
+        if (isConfirmed(transactionId)) {
+            executeTransaction(transactionId);
+        }
     }
 
     //  function to put our transactions into that storage!
