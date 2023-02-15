@@ -20,13 +20,13 @@ contract MultiSig {
     function executeTransaction(uint transactionId) public {
         require(isConfirmed(transactionId));
         Transaction storage _tx = transactions[transactionId];
-        (bool success, ) = _tx.destination.call{value: _tx.value}("");
-        require(success);
-        _tx.executed = true;
+        (bool success, ) = _tx.destination.call{value: _tx.value}(""); // call is a low level function that allows us to send ether to a contract address
+        require(success); // if the transaction fails, revert the transaction
+        _tx.executed = true; //Once transferred, set boolean to true
     }
 
     function isConfirmed(uint transactionId) public view returns (bool) {
-        return getConfirmationsCount(transactionId) >= required;
+        return getConfirmationsCount(transactionId) >= required; //Return true if the transaction is confirmed and false if it is not.
     }
 
     function getConfirmationsCount(
@@ -47,7 +47,7 @@ contract MultiSig {
                 return true;
             }
         }
-        return false;
+        return false; // If the address is not an owner, return false.
     }
 
     function submitTransaction(address payable dest, uint value) external {
@@ -57,7 +57,7 @@ contract MultiSig {
 
     function confirmTransaction(uint transactionId) public {
         require(isOwner(msg.sender));
-        confirmations[transactionId][msg.sender] = true;
+        confirmations[transactionId][msg.sender] = true; //maps the transaction id (uint) to an owner (address) to whether or not they have confirmed the transaction (bool).
         if (isConfirmed(transactionId)) {
             executeTransaction(transactionId);
         }
@@ -67,7 +67,7 @@ contract MultiSig {
         address payable destination,
         uint value
     ) public returns (uint) {
-        transactions[transactionCount] = Transaction(destination, value, false);
+        transactions[transactionCount] = Transaction(destination, value, false); //Define a mapping that maps transaction IDs to Transaction structs
         transactionCount += 1;
         return transactionCount - 1;
     }
