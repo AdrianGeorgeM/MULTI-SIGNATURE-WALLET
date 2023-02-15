@@ -31,6 +31,7 @@ contract MultiSig {
         return count;
     }
 
+    //Ensure that confirmTransaction can only be called by the owners stored in the constructor.
     function isOwner(address addr) private view returns (bool) {
         for (uint i = 0; i < owners.length; i++) {
             if (owners[i] == addr) {
