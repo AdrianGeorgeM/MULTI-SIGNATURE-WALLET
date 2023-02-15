@@ -8,10 +8,13 @@ contract MultiSig {
 
     //Define a Transaction struct that includes
     struct Transaction {
-        address destination;
-        uint value;
-        bool executed;
+        address destination; //destination of the transaction's value.
+        uint value; //value of the transaction in wei.
+        bool executed; // indicates if the transaction has been executed.
     }
+
+    //Define a mapping that maps transaction IDs to Transaction structs
+    mapping(uint => Transaction) public transactions;
 
     constructor(address[] memory _owners, uint _confirmations) {
         //revert the deployment transaction in the following situations:
