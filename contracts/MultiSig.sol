@@ -16,6 +16,9 @@ contract MultiSig {
     //Define a mapping that maps transaction IDs to Transaction structs
     mapping(uint => Transaction) public transactions;
 
+    //maps the transaction id (uint) to an owner (address) to whether or not they have confirmed the transaction (bool).
+    mapping(uint => mapping(address => bool)) public confirmations;
+
     //  function to put our transactions into that storage!
     function addTransaction(
         address destination,
