@@ -19,6 +19,11 @@ contract MultiSig {
     //maps the transaction id (uint) to an owner (address) to whether or not they have confirmed the transaction (bool).
     mapping(uint => mapping(address => bool)) public confirmations;
 
+    //This function should create a confirmation for the transaction from the msg.sender.
+    function confirmTransaction(uint transactionId) public {
+        confirmations[transactionId][msg.sender] = true;
+    }
+
     //  function to put our transactions into that storage!
     function addTransaction(
         address destination,
