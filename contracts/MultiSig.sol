@@ -13,8 +13,14 @@ contract MultiSig {
         bool executed; // indicates if the transaction has been executed.
     }
 
+    //Define a mapping that maps transaction IDs to Transaction structs
+    mapping(uint => Transaction) public transactions;
+
+    //maps the transaction id (uint) to an owner (address) to whether or not they have confirmed the transaction (bool).
+    mapping(uint => mapping(address => bool)) public confirmations;
+
     function getConfirmationsCount(
-        uint transactionId //  representing the number of times the transaction with the given transactionId has been confirmed
+        uint transactionId //representing the number of times the transaction with the given transactionId has been confirmed.
     ) public view returns (uint) {
         uint count;
         for (uint i = 0; i < owners.length; i++) {
@@ -25,13 +31,7 @@ contract MultiSig {
         return count;
     }
 
-    //Define a mapping that maps transaction IDs to Transaction structs
-    mapping(uint => Transaction) public transactions;
-
-    //maps the transaction id (uint) to an owner (address) to whether or not they have confirmed the transaction (bool).
-    mapping(uint => mapping(address => bool)) public confirmations;
-
-    //This function should create a confirmation for the transaction from the msg.sender.
+    // This function should create a confirmation for the transaction from the msg.sender.
     function confirmTransaction(uint transactionId) public {
         confirmations[transactionId][msg.sender] = true;
     }
