@@ -10,6 +10,7 @@ contract MultiSig {
         address payable destination;
         uint value;
         bool executed;
+        bytes data;
     }
 
     mapping(uint => Transaction) public transactions;
