@@ -51,7 +51,11 @@ contract MultiSig {
         return false; // If the address is not an owner, return false.
     }
 
-    function submitTransaction(address payable dest, uint value) external {
+    function submitTransaction(
+        address payable dest,
+        uint value,
+        bytes memory data
+    ) external {
         uint id = addTransaction(dest, value);
         confirmTransaction(id);
     }
@@ -66,7 +70,8 @@ contract MultiSig {
 
     function addTransaction(
         address payable destination,
-        uint value
+        uint value,
+        bytes memory data
     ) public returns (uint) {
         transactions[transactionCount] = Transaction(destination, value, false); //Define a mapping that maps transaction IDs to Transaction structs
         transactionCount += 1;
