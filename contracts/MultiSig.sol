@@ -6,6 +6,13 @@ contract MultiSig {
     uint public transactionCount; //store the required amount of confirmations needed to execute a transaction
     uint public required;
 
+    //Define a Transaction struct that includes
+    struct Transaction {
+        address destination;
+        uint value;
+        bool executed;
+    }
+
     constructor(address[] memory _owners, uint _confirmations) {
         //revert the deployment transaction in the following situations:
         //1. if the number of owners is 0
