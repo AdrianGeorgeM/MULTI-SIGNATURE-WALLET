@@ -13,6 +13,18 @@ contract MultiSig {
         bool executed; // indicates if the transaction has been executed.
     }
 
+    function getConfirmationsCount(
+        uint transactionId //  representing the number of times the transaction with the given transactionId has been confirmed
+    ) public view returns (uint) {
+        uint count;
+        for (uint i = 0; i < owners.length; i++) {
+            if (confirmations[transactionId][owners[i]]) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     //Define a mapping that maps transaction IDs to Transaction structs
     mapping(uint => Transaction) public transactions;
 
