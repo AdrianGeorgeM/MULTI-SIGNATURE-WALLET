@@ -41,6 +41,12 @@ contract MultiSig {
         return false;
     }
 
+    //function that will allow a user to create a transaction and immediately confirm it.
+    function submitTransaction(address dest, uint value) external {
+        uint id = addTransaction(dest, value);
+        confirmTransaction(id);
+    }
+
     // This function should create a confirmation for the transaction from the msg.sender.
     function confirmTransaction(uint transactionId) public {
         require(isOwner(msg.sender));
