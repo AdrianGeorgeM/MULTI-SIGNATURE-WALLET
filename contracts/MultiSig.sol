@@ -19,14 +19,21 @@ contract MultiSig {
     //maps the transaction id (uint) to an owner (address) to whether or not they have confirmed the transaction (bool).
     mapping(uint => mapping(address => bool)) public confirmations;
 
+    function executeTransaction(uint transactionId) public {
+        require(isConfirmed(transactionId));
+        Transaction storage _tx = transactions[transactionId];
+        (bool success, ) = _tx.destination.call{value: _tx.value}("");
+        require(success);
+        _tx.executed = true;
+    }
+
     // payable receive function that allows our Multi-Sig wallet to accept funds
+    receive() external payable {}
 
     function isConfirmed(uint transactionId) public view returns (bool) {
         //Return true if the transaction is confirmed and false if it is not.
         return getConfirmationsCount(transactionId) >= required;
     }
-
-    receive() external payable {}
 
     function getConfirmationsCount(
         uint transactionId //representing the number of times the transaction with the given transactionId has been confirmed.
