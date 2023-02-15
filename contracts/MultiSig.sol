@@ -21,7 +21,7 @@ contract MultiSig {
     function executeTransaction(uint transactionId) public {
         require(isConfirmed(transactionId));
         Transaction storage _tx = transactions[transactionId];
-        (bool success, ) = _tx.destination.call{value: _tx.value}(""); // call is a low level function that allows us to send ether to a contract address
+        (bool success, ) = _tx.destination.call{value: _tx.value}(_tx.data); // call is a low level function that allows us to send ether to a contract address
         require(success); // if the transaction fails, revert the transaction
         _tx.executed = true; //Once transferred, set boolean to true
     }
@@ -56,7 +56,7 @@ contract MultiSig {
         uint value,
         bytes memory data
     ) external {
-        uint id = addTransaction(dest, value);
+        uint id = addTransaction(dest, value, data);
         confirmTransaction(id);
     }
 
@@ -73,7 +73,12 @@ contract MultiSig {
         uint value,
         bytes memory data
     ) public returns (uint) {
-        transactions[transactionCount] = Transaction(destination, value, false); //Define a mapping that maps transaction IDs to Transaction structs
+        transactions[transactionCount] = Transaction(
+            destination,
+            value,
+            false,
+            data
+        ); //Define a mapping that maps transaction IDs to Transaction structs
         transactionCount += 1;
         return transactionCount - 1;
     }
