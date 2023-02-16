@@ -13,16 +13,16 @@ contract MultiSig {
         bytes data;
     }
 
-    mapping(uint => Transaction) public transactions;
-    mapping(uint => mapping(address => bool)) public confirmations;
+    mapping(uint => Transaction) public transactions; // Define a mapping that maps transaction IDs to Transaction structs
+    mapping(uint => mapping(address => bool)) public confirmations; //maps the transaction id (uint) to an owner (address) to whether or not they have confirmed the transaction (bool).
 
-    receive() external payable {}
+    receive() external payable {} //Allows the contract to receive ether
 
     function executeTransaction(uint transactionId) public {
         require(isConfirmed(transactionId));
         Transaction storage _tx = transactions[transactionId];
         (bool success, ) = _tx.destination.call{value: _tx.value}(_tx.data); // call is a low level function that allows us to send ether to a contract address
-        require(success); // if the transaction fails, revert the transaction
+        require(success, "Failed to execute transaction"); // if the transaction fails, revert the transaction
         _tx.executed = true; //Once transferred, set boolean to true
     }
 
@@ -31,9 +31,9 @@ contract MultiSig {
     }
 
     function getConfirmationsCount(
-        uint transactionId
+        uint transactionId //Return the number of confirmations for a given transaction.
     ) public view returns (uint) {
-        uint count;
+        uint count; //Define a variable to store the number of confirmations
         for (uint i = 0; i < owners.length; i++) {
             if (confirmations[transactionId][owners[i]]) {
                 count++;
@@ -52,8 +52,8 @@ contract MultiSig {
     }
 
     function submitTransaction(
-        address payable dest,
-        uint value,
+        address payable dest, //Define a function that allows an owner to submit a transaction
+        uint value, //Define a function that allows an owner to submit a transaction
         bytes memory data
     ) external {
         uint id = addTransaction(dest, value, data);
